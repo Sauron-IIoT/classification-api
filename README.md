@@ -1,4 +1,4 @@
-# Poseidon BFF
+# Sauron - Classification API
 
 ## How to install
 

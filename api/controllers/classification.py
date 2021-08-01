@@ -11,8 +11,8 @@ async def classify(request):
         image_path = input_data["image"]       
     except:
         print("Bad request")
-        return JSONResponse({"Error": Messages.BAD_REQUEST}, status_code=400)
+        return JSONResponse({"Error": Messages.BAD_REQUEST.value}, status_code=400)
 
     # pega o modelo, classifica
 
-    return JSONResponse(content=Response(.95, 1, "opened").toJson(), status_code=200)
+    return JSONResponse(content=Response(.95, 1, "opened").response, status_code=200)

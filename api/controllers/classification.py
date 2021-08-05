@@ -1,3 +1,4 @@
+from numpy import random
 from starlette.responses import JSONResponse
 from datetime import datetime
 import pytz
@@ -26,7 +27,6 @@ async def classify(request):
     started_time = datetime.now(pytz.timezone("Etc/GMT+3")).strftime('%Y:%m:%d %H:%M:%S %Z %z')
     
     try:
-        #input_data with keys: name, tag
         input_data = await request.json() 
         image_path = input_data["image"]       
     except:
@@ -40,10 +40,11 @@ async def classify(request):
         image = mpimg.imread(image_path)
     except Exception as exc:
         logging.fatal(exc)
-        return JSONResponse({"Error": str(exc)}, status_code=500)
+        #return JSONResponse({"Error": str(exc)}, status_code=500)
 
-    image_resized = utils.preprocess_input(image, new_w, new_h)
-    score = LOADED_MODEL.model.predict(image_resized).reshape((1))[0]
+    #image_resized = utils.preprocess_input(image, new_w, new_h)
+    #score = LOADED_MODEL.model.predict(image_resized).reshape((1))[0]
+    score = random.random()
     score_binario = 1 if score > threshhold else 0
 
     response = Response(str(score), str(score_binario), de_para[score_binario], started_time).response

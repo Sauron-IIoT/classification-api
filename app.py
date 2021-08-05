@@ -8,7 +8,7 @@ from model.model import LOADED_MODEL
 from api.config.logger import LOGGER
 
 def startup():
-    LOADED_MODEL.load_model()
+    #LOADED_MODEL.load_model()
     LOGGER.info('Ready to go')
 
 middleware = [

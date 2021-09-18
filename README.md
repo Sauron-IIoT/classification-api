@@ -35,6 +35,13 @@ Or simply install python and install its dependencies.
 
 ## Running
 
+Create an ````.env``` file with the following content:
+
+```
+PROD=True
+MODEL_PATH=model/weights/model_apple_banana.h5
+```
+
 Execute on your terminal:
 
 ```

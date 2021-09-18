@@ -56,8 +56,8 @@ def classify_img(image_path, new_width, new_height):
         logging.info(image_path)
         image = mpimg.imread(image_path)
     except Exception as exc:
-        logging.fatal(exc)
-        return JSONResponse({"Error": str(exc)}, status_code=500)
+        logging.fatal(str(exc))
+        raise exc
 
     image_resized = utils.preprocess_input(image, new_width, new_height)
     return LOADED_MODEL.model.predict(image_resized)[0][0].reshape(1)[0]

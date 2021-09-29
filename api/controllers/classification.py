@@ -1,8 +1,7 @@
 from numpy import random
 from starlette.responses import JSONResponse
 import logging
-import keras
-import json
+from tensorflow import keras
 import tensorflow as tf
 import numpy as np
 from api.config.logger import LOGGER
@@ -12,9 +11,6 @@ from api.messages.messages import Messages
 from api.config.settings import PROD
 
 from model.model import LOADED_MODEL
-from model import utils
-
-import matplotlib.image as mpimg
 
 threshold = 0.7
 

@@ -1,11 +1,14 @@
 from numpy import random
 from starlette.responses import JSONResponse
-from datetime import datetime
-import pytz
 import logging
+import keras
+import json
+import tensorflow as tf
+import numpy as np
+from api.config.logger import LOGGER
+
 
 from api.messages.messages import Messages
-from api.model.response import Response
 from api.config.settings import PROD
 
 from model.model import LOADED_MODEL
@@ -13,51 +16,58 @@ from model import utils
 
 import matplotlib.image as mpimg
 
-threshhold = 0.5
-de_para = {
+threshold = 0.7
+
+labels = {
     1: "banana",
     0: "apple",
 }
 
-
 async def classify(request):
 
+    LOGGER.info(request)
+
     image_path = None
-    new_w = 256
-    new_h = 256
-    started_time = datetime.now(pytz.timezone("Etc/GMT+3")).strftime('%Y:%m:%d %H:%M:%S %Z %z')
-    
+
     try:
-        input_data = await request.json() 
-        image_path = input_data["image"]       
+        input_data = await request.json()
+        image_path = input_data["image"]
     except:
         print("Bad request")
         return JSONResponse({"Error": Messages.BAD_REQUEST.value}, status_code=400)
 
-    score = 0
+    prediction = None
     if PROD:
-        score = classify_img(image_path, new_w, new_h)
+        prediction = predict(image_path)
     else:
-        score = mock_score()
+        prediction = mock_predict()
 
-    score_binario = 1 if score > threshhold else 0
+    LOGGER.info(f'prediction: {prediction}')
 
-    response = Response(str(score), str(score_binario), de_para[score_binario], started_time).response
-
-    return JSONResponse(content=response, status_code=200)
+    return JSONResponse(content=prediction, status_code=200)
 
 
-def mock_score():
-    return random.random()
+def mock_predict():
+    return { "label": labels[random.randint(0, 1)], "confidence": random.random() }
 
-def classify_img(image_path, new_width, new_height):
-    image = None
-    try:
-        logging.info(image_path)
-        image = mpimg.imread(image_path)
-    except Exception as exc:
-        logging.fatal(exc)
-        return JSONResponse({"Error": str(exc)}, status_code=500)
+def predict(image_path):
 
-    image_resized = utils.preprocess_input(image, new_width, new_height)
-    return LOADED_MODEL.model.predict(image_resized)[0][0].reshape(1)[0]
+    image = load_img(image_path)
+    prediction = LOADED_MODEL.model.predict(image)[0]
+
+    logging.info(f'model prediction: {prediction}')
+
+    max_class = np.argmax(prediction)
+    max_confidence = float(np.max(prediction))
+
+    if (max_confidence < threshold):
+        return { "label": None, "confidence": None }
+    else:
+        return { "label": labels[max_class], "confidence": max_confidence }
+
+def load_img(image_path):
+    image = keras.preprocessing.image.load_img(
+        image_path, target_size=(256, 256)
+    )
+    img_array = keras.preprocessing.image.img_to_array(image)
+    return tf.expand_dims(img_array, 0)

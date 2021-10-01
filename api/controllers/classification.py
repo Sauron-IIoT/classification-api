@@ -70,7 +70,7 @@ def predict(image_path):
 
 def load_img(image_path):
     image = keras.preprocessing.image.load_img(
-        image_path, target_size=(256, 256)
+        image_path, target_size=(320, 480)
     )
     img_array = keras.preprocessing.image.img_to_array(image)
     return tf.expand_dims(img_array, 0)

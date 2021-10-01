@@ -15,8 +15,8 @@ from model.model import LOADED_MODEL
 threshold = 0.7
 
 labels = {
-    1: "esp32",
-    0: "motor",
+    0: "esp32",
+    1: "motor",
 }
 
 async def classify(request):

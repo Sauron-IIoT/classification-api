@@ -15,8 +15,8 @@ from model.model import LOADED_MODEL
 threshold = 0.7
 
 labels = {
-    1: "banana",
-    0: "apple",
+    1: "esp32",
+    0: "motor",
 }
 
 async def classify(request):
@@ -31,6 +31,8 @@ async def classify(request):
     except:
         print("Bad request")
         return JSONResponse({"Error": Messages.BAD_REQUEST.value}, status_code=400)
+
+    logging.info(f'image path: {image_path}')
 
     prediction = None
     if PROD:
@@ -48,7 +50,12 @@ def mock_predict():
 
 def predict(image_path):
 
+    print(f'loading image {image_path}')
+
     image = load_img(image_path)
+
+    logging.info('image loaded')
+
     prediction = LOADED_MODEL.model.predict(image)[0]
 
     logging.info(f'model prediction: {prediction}')

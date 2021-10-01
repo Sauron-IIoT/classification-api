@@ -39,7 +39,7 @@ Create an ````.env``` file with the following content:
 
 ```
 PROD=True
-MODEL_PATH=model/weights/model_apple_banana.h5
+MODEL_PATH=model/weights/model.h5
 ```
 
 Execute on your terminal:

@@ -1,5 +1,6 @@
 from tensorflow import keras
 from api.config.logger import LOGGER
+from api.config.settings import PROD, MODEL_PATH
 
 
 class ClassificationModel():
@@ -15,4 +16,6 @@ class ClassificationModel():
         except Exception as exc:
             LOGGER.fatal(exc)
 
-LOADED_MODEL = ClassificationModel("model/weights/model_box.h5")
+LOADED_MODEL = None
+if PROD:
+    LOADED_MODEL = ClassificationModel(MODEL_PATH)

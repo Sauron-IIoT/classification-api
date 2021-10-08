@@ -1,8 +1,20 @@
-FROM python:3.8
+FROM kumatea/tensorflow:2.4.1-py38
 
-COPY requirements.txt /app/ 
 WORKDIR /app
-RUN pip install -r requirements.txt
+
+RUN apt update -y
+
+RUN pip install pipenv
+
+COPY Pipfile* .
+
+RUN pipenv lock
+
+RUN pipenv install --system
+
+RUN apt-get install python3-h5py -y
+
+RUN apt-get install ffmpeg libsm6 libxext6 -y
 
 COPY . .
 

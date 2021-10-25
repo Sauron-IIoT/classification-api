@@ -43,14 +43,13 @@ async def classify(request):
     else:
         prediction = mock_predict()
 
-    LOGGER.info(f'prediction: {prediction}')
-
     end_time = datetime.datetime.now()
-
     time_diff = (end_time - start_time)
     execution_time = time_diff.total_seconds() * 1000
+    prediction['prediction_processing_time'] = execution_time
 
-    prediction['processing_time'] = execution_time
+    LOGGER.info(f'prediction: {prediction}')
+
     return JSONResponse(content=prediction, status_code=200)
 
 

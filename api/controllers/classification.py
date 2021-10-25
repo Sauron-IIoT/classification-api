@@ -72,7 +72,7 @@ def predict(image_path):
     max_confidence = float(np.max(prediction))
 
     if (max_confidence < threshold):
-        return { "label": None, "confidence": None }
+        return { "label": None, "confidence": max_confidence }
     else:
         return { "label": labels[max_class], "confidence": max_confidence }
 

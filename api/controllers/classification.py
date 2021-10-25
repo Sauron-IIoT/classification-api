@@ -5,6 +5,7 @@ from tensorflow import keras
 import tensorflow as tf
 import numpy as np
 from api.config.logger import LOGGER
+import datetime
 
 
 from api.messages.messages import Messages
@@ -20,6 +21,8 @@ labels = {
 }
 
 async def classify(request):
+
+    start_time = datetime.datetime.now()
 
     LOGGER.info(request)
 
@@ -41,6 +44,12 @@ async def classify(request):
         prediction = mock_predict()
 
     LOGGER.info(f'prediction: {prediction}')
+
+    end_time = datetime.datetime.now()
+
+    time_diff = (end_time - start_time)
+    execution_time = time_diff.total_seconds() * 1000
+    logging.info(f'prediction took {execution_time}ms')
 
     return JSONResponse(content=prediction, status_code=200)
 

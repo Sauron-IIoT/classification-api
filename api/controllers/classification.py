@@ -49,8 +49,8 @@ async def classify(request):
 
     time_diff = (end_time - start_time)
     execution_time = time_diff.total_seconds() * 1000
-    logging.info(f'prediction took {execution_time}ms')
 
+    prediction['processing_time'] = execution_time
     return JSONResponse(content=prediction, status_code=200)
 
 
